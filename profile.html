@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>个人中心 - POP MART</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 原个人中心样式 */
+    .profile-container {
+        transform: scale(2); /* 整体放大一倍 */
+        transform-origin: top center; /* 从顶部中心开始缩放 */
+        width: 50%; /* 容器宽度减半以适应缩放 */
+        margin: 0 auto; /* 保持居中 */
+        padding: 40px 0; /* 增加上下内边距避免内容被截断 */
+        height: 50vh; /* 将容器高度设置为视口的50% */
+        overflow-y: auto; /* 如需滚动显示完整内容 */
+    }
+    .profile-sidebar {
+  width: 100% !important;
+  max-width: 100%;
+  margin: 0; /* 移除侧边栏外边距 */
+  padding: 1rem 5%; /* 减少顶部和底部内边距 */
+  background-color: #f8f9fa;
+  border-radius: 0; /* 移除圆角，使其贴边 */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* 添加阴影增强立体感 */
+  min-height: auto; /* 移除最小高度限制 */
+  text-align: center; /* 文字居中显示 */
+}
+    .profile-avatar {
+      width: 150px; /* 增大头像 */
+      height: 150px;
+      margin: 0 auto 2rem; /* 居中并增加底部间距 */
+    }
+    .profile-info h2 {
+      font-size: 2rem; /* 增大标题文字 */
+      margin-bottom: 1rem;
+    }
+    .profile-info p {
+      font-size: 1.2rem; /* 增大小字信息 */
+      margin-bottom: 2rem;
+    }
+    .profile-menu {
+      gap: 1.5rem; /* 增大菜单项间距 */
+    }
+    .profile-menu li {
+      margin-bottom: 15px; /* 增大菜单项间距 */
+    }
+    .profile-menu a {
+      font-size: 1.3rem; /* 增大菜单文字 */
+      padding: 1.2rem 0; /* 增大菜单项高度 */
+      border-radius: 8px; /* 增大圆角 */
+    }
+    .profile-menu i {
+      font-size: 1.5rem; /* 增大图标 */
+      margin-right: 0.8rem; /* 增大图标与文字间距 */
+    }
+    .profile-menu a:hover {
+      background: #eee;
+    }
+    .profile-menu a.active {
+      background: #ffcc00;
+      color: #333;
+    }
+    
+    .profile-content {
+      flex: 1;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .order-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .order-header {
+      background: #f5f5f5;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-id {
+      font-weight: bold;
+    }
+    .order-status {
+      color: #f00;
+    }
+    .order-products {
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+    }
+    .order-product-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .order-product-info {
+      flex: 1;
+    }
+    .order-product-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .order-product-price {
+      color: #f00;
+    }
+    .order-actions {
+      padding: 12px;
+      border-top: 1px solid #eee;
+      text-align: right;
+    }
+    .order-btn {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .wishlist-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .wishlist-img {
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+    }
+    .wishlist-info {
+      padding: 12px;
+    }
+    .wishlist-name {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .wishlist-price {
+      color: #f00;
+      font-weight: bold;
+    }
+    .wishlist-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .wishlist-remove {
+      padding: 6px 12px;
+      background: #fff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .wishlist-add {
+      padding: 6px 12px;
+      background: #ffcc00;
+      color: #333;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .address-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .address-item.default {
+      border-color: #ffcc00;
+    }
+    .address-tag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ffcc00;
+      color: #333;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .address-name {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .address-details {
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .address-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .address-btn {
+      padding: 4px 8px;
+      background: #fff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    /* 登录模态框样式 */
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .auth-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .auth-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    
+    .auth-modal.active .auth-container {
+      transform: scale(1);
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 20px;
+      color: #999;
+    }
+
+    /* 模态框基础样式 */
+    .auth-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-modal.active {
+      display: flex;
+    }
+
+    .auth-container {
+      width: 90%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <a href="index.html"><img src="img/logo.png" alt="POP MART" /></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="mall.html">线上商城</a></li>
+      <li><a href="campus.html">校园交易</a></li>
+      <li><a href="profile.html">个人中心</a></li>
+    </ul>
+  </nav>
+
+  <!-- 内容区 -->
+  <div class="container">
+    <div class="profile-container">
+      <!-- 侧边栏 -->
+      <div class="profile-sidebar">
+        <div class="profile-info">
+          <img src="img/tx.jpg" alt="头像" class="profile-avatar">
+          <h2>未登录</h2>
+          <p>等级：LV.0</p>
+          <p>积分：0.00</p>
+        </div>
+        
+        <ul class="profile-menu">
+          <li><a href="#orders" class="active">我的订单</a></li>
+          <li><a href="#wishlist" id="open-wishlist-modal">我的收藏</a></li>
+          <li><a href="#" id="open-address-modal">地址管理</a></li>
+          <li><a href="campus.html">校园交易</a></li>
+          <li><a href="#" id="open-coupon-modal">我的优惠券</a></li>
+          <li><a href="#" id="open-points-modal">积分记录</a></li> <!-- 修改此行 -->
+          <li><a href="#" id="open-login-modal">登录</a></li>
+        </ul>
+      </div>
+      
+      <!-- 主内容 -->
+
+        <!-- 我的订单 -->
+<!-- 我的订单 -->
+
+  <!-- 登录注册模态框 -->
+  <div id="auth-modal" class="auth-modal">
+    <div class="auth-container">
+      <!-- 登录注册卡片 -->
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <!-- 品牌与模式切换 -->
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-user-circle text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">Fuzzy Toys账户</h1>
+          </div>
+          <button id="close-modal" class="close-modal">×</button>
+        </div>
+
+        <!-- 表单切换选项卡 -->
+        <div class="flex border-b border-neutral-200">
+          <button id="modal-login-tab" class="flex-1 py-4 text-primary font-medium border-b-2 border-primary">登录</button>
+          <button id="modal-register-tab" class="flex-1 py-4 text-neutral-500 hover:text-neutral-700 transition-colors">注册</button>
+        </div>
+
+        <!-- 登录表单 -->
+        <div id="modal-login-form" class="p-6 animate-fade-in">
+          <div class="space-y-4">
+            <div>
+              <label for="modal-login-email" class="block text-sm font-medium text-neutral-700 mb-1">邮箱地址</label>
+              <div class="relative">
+                <i class="fa fa-envelope-o absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="email" id="modal-login-email" class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="your@email.com">
+              </div>
+            </div>
+            <div>
+              <label for="modal-login-password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-login-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="输入密码">
+                <button type="button" id="modal-toggle-login-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <label class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary">
+                <span class="ml-2 text-sm text-neutral-600">记住我</span>
+              </label>
+              <a href="#" class="text-sm text-primary hover:underline">忘记密码？</a>
+            </div>
+            <button type="button" id="modal-login-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+              登录账户
+            </button>
+          </div>
+          <p class="text-center text-sm text-neutral-500 mt-4">
+            还没有账户？<a href="#" id="modal-go-to-register" class="text-primary hover:underline">立即注册</a>
+          </p>
+        </div>
+
+        <!-- 注册表单（默认隐藏） -->
+        <div id="modal-register-form" class="p-6 animate-fade-in hidden">
+          <div class="space-y-4">
+            <div>
+              <label for="modal-register-email" class="block text-sm font-medium text-neutral-700 mb-1">邮箱地址</label>
+              <div class="relative">
+                <i class="fa fa-envelope-o absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="email" id="modal-register-email" class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="your@email.com">
+              </div>
+            </div>
+            <div>
+              <label for="modal-register-password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-register-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="至少8位字符">
+                <button type="button" id="modal-toggle-register-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label for="modal-register-confirm-password" class="block text-sm font-medium text-neutral-700 mb-1">确认密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-register-confirm-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="再次输入密码">
+                <button type="button" id="modal-toggle-register-confirm-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <label class="flex items-center h-5">
+                <input type="checkbox" class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary">
+              </label>
+              <span class="ml-2 text-sm text-neutral-600">
+                我同意<a href="#" class="text-primary hover:underline">服务条款</a>和<a href="#" class="text-primary hover:underline">隐私政策</a>
+              </span>
+            </div>
+            <button type="button" id="modal-register-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+              注册账户
+            </button>
+          </div>
+          <p class="text-center text-sm text-neutral-500 mt-4">
+            已有账户？<a href="#" id="modal-go-to-login" class="text-primary hover:underline">立即登录</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- 通知提示框 -->
+      <div id="modal-notification" class="fixed bottom-4 left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-lg max-w-xs transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center">
+        <div id="modal-notification-icon" class="w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0"></div>
+        <span id="modal-notification-message" class="text-sm"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 优惠券弹窗 -->
+  <div id="coupon-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-ticket text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">我的优惠券</h1>
+          </div>
+          <button id="close-coupon-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-ticket"></i></div>
+          <p class="text-neutral-500 text-lg">暂无可用优惠券</p>
+          <button id="confirm-coupon" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 积分记录弹窗 -->
+  <div id="points-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-star text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">积分记录</h1>
+          </div>
+          <button id="close-points-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-star-o"></i></div>
+          <p class="text-neutral-500 text-lg">暂无可用积分</p>
+          <button id="confirm-points" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 地址管理弹窗 -->
+  <div id="address-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-map-marker text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">地址管理</h1>
+          </div>
+          <button id="close-address-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-6">
+          <div class="address-item default">
+            <div class="address-tag">默认地址</div>
+            <div class="address-name">张三 (收)</div>
+            <div class="address-details">株洲市 100080 13800138000</div>
+            <div class="address-actions">
+              <button class="address-btn">设为默认</button>
+              <button class="address-btn">编辑</button>
+              <button class="address-btn">删除</button>
+            </div>
+          </div>
+          
+          <div class="address-item">
+            <div class="address-name">李四 (收)</div>
+            <div class="address-details">长沙市 201203 13900139000</div>
+            <div class="address-actions">
+              <button class="address-btn">设为默认</button>
+              <button class="address-btn">编辑</button>
+              <button class="address-btn">删除</button>
+            </div>
+          </div>
+          
+          <button class="order-btn">添加新地址</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收藏弹窗控制 -->
+  <div id="wishlist-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-heart text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">我的收藏</h1>
+          </div>
+          <button id="close-wishlist-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-heart-o"></i></div>
+          <p class="text-neutral-500 text-lg">暂无收藏商品</p>
+          <button id="confirm-wishlist" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+ 
+
+  <script>
+    // 模态框控制
+    const authModal = document.getElementById('auth-modal');
+    const openLoginModal = document.getElementById('open-login-modal');
+    const closeModal = document.getElementById('close-modal');
+    
+    openLoginModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      authModal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // 防止背景滚动
+    });
+    
+    closeModal.addEventListener('click', () => {
+      authModal.classList.remove('active');
+      document.body.style.overflow = ''; // 恢复背景滚动
+    });
+    
+    // 点击模态框外部关闭
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // 表单切换
+    const modalLoginTab = document.getElementById('modal-login-tab');
+    const modalRegisterTab = document.getElementById('modal-register-tab');
+    const modalLoginForm = document.getElementById('modal-login-form');
+    const modalRegisterForm = document.getElementById('modal-register-form');
+    const modalGoToRegister = document.getElementById('modal-go-to-register');
+    const modalGoToLogin = document.getElementById('modal-go-to-login');
+
+    function showModalLoginForm() {
+      modalLoginForm.classList.remove('hidden');
+      modalRegisterForm.classList.add('hidden');
+      modalLoginTab.classList.add('text-primary', 'border-primary');
+      modalRegisterTab.classList.remove('text-primary', 'border-primary');
+      modalRegisterTab.classList.add('text-neutral-500');
+    }
+
+    function showModalRegisterForm() {
+      modalLoginForm.classList.add('hidden');
+      modalRegisterForm.classList.remove('hidden');
+      modalRegisterTab.classList.add('text-primary', 'border-primary');
+      modalLoginTab.classList.remove('text-primary', 'border-primary');
+      modalLoginTab.classList.add('text-neutral-500');
+    }
+
+    modalLoginTab.addEventListener('click', showModalLoginForm);
+    modalRegisterTab.addEventListener('click', showModalRegisterForm);
+    modalGoToRegister.addEventListener('click', showModalRegisterForm);
+    modalGoToLogin.addEventListener('click', showModalLoginForm);
+
+    // 密码显示/隐藏
+    function setupModalPasswordToggle(buttonId, inputId) {
+      const button = document.getElementById(buttonId);
+      const input = document.getElementById(inputId);
+      
+      button.addEventListener('click', () => {
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        button.innerHTML = type === 'password' ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+      });
+    }
+
+    setupModalPasswordToggle('modal-toggle-login-password', 'modal-login-password');
+    setupModalPasswordToggle('modal-toggle-register-password', 'modal-register-password');
+    setupModalPasswordToggle('modal-toggle-register-confirm-password', 'modal-register-confirm-password');
+
+    // 表单验证与提交
+    const modalLoginBtn = document.getElementById('modal-login-btn');
+    const modalRegisterBtn = document.getElementById('modal-register-btn');
+
+    modalLoginBtn.addEventListener('click', () => {
+      const email = document.getElementById('modal-login-email').value.trim();
+      const password = document.getElementById('modal-login-password').value.trim();
+      
+      if (!email || !password) {
+        showModalNotification('请填写所有字段', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showModalNotification('请输入有效的邮箱地址', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showModalNotification('密码至少需要6位', 'error');
+        return;
+      }
+      
+      // 模拟登录成功
+      showModalNotification('登录成功，正在跳转...', 'success');
+      setTimeout(() => {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // 更新个人中心显示
+        document.querySelector('.profile-info h2').textContent = 'POP会员';
+        document.querySelector('.profile-info p:nth-of-type(1)').textContent = '等级：LV.1';
+        document.querySelector('.profile-info p:nth-of-type(2)').textContent = '积分：100.00';
+        
+        // 隐藏登录链接，显示退出链接
+        const profileMenu = document.querySelector('.profile-menu');
+        const loginItem = profileMenu.querySelector('li:last-child');
+        loginItem.innerHTML = '<a href="#" id="logout">退出登录</a>';
+        
+        // 添加退出事件
+        document.getElementById('logout').addEventListener('click', (e) => {
+          e.preventDefault();
+          // 恢复未登录状态
+          document.querySelector('.profile-info h2').textContent = '未登录';
+          document.querySelector('.profile-info p:nth-of-type(1)').textContent = '等级：LV.0';
+          document.querySelector('.profile-info p:nth-of-type(2)').textContent = '积分：0.00';
+          
+          // 恢复登录链接
+          loginItem.innerHTML = '<a href="#" id="open-login-modal">登录</a>';
+          
+          // 重新绑定登录按钮事件
+          document.getElementById('open-login-modal').addEventListener('click', (e) => {
+            e.preventDefault();
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          });
+        });
+      }, 1500);
+    });
+
+    modalRegisterBtn.addEventListener('click', () => {
+      const email = document.getElementById('modal-register-email').value.trim();
+      const password = document.getElementById('modal-register-password').value.trim();
+      const confirmPassword = document.getElementById('modal-register-confirm-password').value.trim();
+      
+      if (!email || !password || !confirmPassword) {
+        showModalNotification('请填写所有字段', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showModalNotification('请输入有效的邮箱地址', 'error');
+        return;
+      }
+      
+      if (password.length < 8) {
+        showModalNotification('密码至少需要8位', 'error');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        showModalNotification('两次输入的密码不一致', 'error');
+        return;
+      }
+      
+      // 模拟注册成功
+      showModalNotification('注册成功，欢迎加入！', 'success');
+      setTimeout(() => {
+        showModalLoginForm();
+      }, 1500);
+    });
+
+    // 邮箱验证
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // 通知提示
+    function showModalNotification(message, type) {
+      const notification = document.getElementById('modal-notification');
+      const messageEl = document.getElementById('modal-notification-message');
+      const iconEl = document.getElementById('modal-notification-icon');
+      
+      messageEl.textContent = message;
+      
+      if (type === 'success') {
+        notification.classList.remove('bg-red-50', 'text-red-800', 'border-red-200');
+        notification.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+        iconEl.classList.remove('bg-red-100', 'text-red-500');
+        iconEl.classList.add('bg-green-100', 'text-green-500');
+        iconEl.innerHTML = '<i class="fa fa-check"></i>';
+      } else {
+        notification.classList.remove('bg-green-50', 'text-green-800', 'border-green-200');
+        notification.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+        iconEl.classList.remove('bg-green-100', 'text-green-500');
+        iconEl.classList.add('bg-red-100', 'text-red-500');
+        iconEl.innerHTML = '<i class="fa fa-exclamation"></i>';
+      }
+
+      notification.classList.remove('translate-y-20', 'opacity-0');
+
+      setTimeout(() => {
+        notification.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // 优惠券弹窗控制
+    const couponModal = document.getElementById('coupon-modal');
+    const openCouponModal = document.getElementById('open-coupon-modal');
+    const closeCouponModal = document.getElementById('close-coupon-modal');
+    const confirmCoupon = document.getElementById('confirm-coupon');
+
+    if (openCouponModal) {
+      openCouponModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (couponModal) {
+          couponModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeCouponModalFunc() {
+      if (couponModal) {
+        couponModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeCouponModal) {
+      closeCouponModal.addEventListener('click', closeCouponModalFunc);
+    }
+
+    if (confirmCoupon) {
+      confirmCoupon.addEventListener('click', closeCouponModalFunc);
+    }
+
+    if (couponModal) {
+      couponModal.addEventListener('click', (e) => {
+        if (e.target === couponModal) {
+          closeCouponModalFunc();
+        }
+      });
+    }
+
+    // 积分记录弹窗控制
+    const pointsModal = document.getElementById('points-modal');
+    const openPointsModal = document.getElementById('open-points-modal');
+    const closePointsModal = document.getElementById('close-points-modal');
+    const confirmPoints = document.getElementById('confirm-points');
+
+    if (openPointsModal) {
+      openPointsModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (pointsModal) {
+          pointsModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closePointsModalFunc() {
+      if (pointsModal) {
+        pointsModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closePointsModal) {
+      closePointsModal.addEventListener('click', closePointsModalFunc);
+    }
+
+    if (confirmPoints) {
+      confirmPoints.addEventListener('click', closePointsModalFunc);
+    }
+
+    if (pointsModal) {
+      pointsModal.addEventListener('click', (e) => {
+        if (e.target === pointsModal) {
+          closePointsModalFunc();
+        }
+      });
+    }
+    // 地址管理弹窗控制
+    const addressModal = document.getElementById('address-modal');
+    const openAddressModal = document.getElementById('open-address-modal');
+    const closeAddressModal = document.getElementById('close-address-modal');
+
+    if (openAddressModal) {
+      openAddressModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (addressModal) {
+          addressModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeAddressModalFunc() {
+      if (addressModal) {
+        addressModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeAddressModal) {
+      closeAddressModal.addEventListener('click', closeAddressModalFunc);
+    }
+
+    if (addressModal) {
+      addressModal.addEventListener('click', (e) => {
+        if (e.target === addressModal) {
+          closeAddressModalFunc();
+        }
+      });
+    }
+
+    // 收藏弹窗控制
+    const wishlistModal = document.getElementById('wishlist-modal');
+    const openWishlistModal = document.getElementById('open-wishlist-modal');
+    const closeWishlistModal = document.getElementById('close-wishlist-modal');
+    const confirmWishlist = document.getElementById('confirm-wishlist');
+
+    if (openWishlistModal) {
+      openWishlistModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (wishlistModal) {
+          wishlistModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeWishlistModalFunc() {
+      if (wishlistModal) {
+        wishlistModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeWishlistModal) {
+      closeWishlistModal.addEventListener('click', closeWishlistModalFunc);
+    }
+
+    if (confirmWishlist) {
+      confirmWishlist.addEventListener('click', closeWishlistModalFunc);
+    }
+
+    if (wishlistModal) {
+      wishlistModal.addEventListener('click', (e) => {
+        if (e.target === wishlistModal) {
+          closeWishlistModalFunc();
+        }
+      });
+    }
+
+    // 订单空状态控制 - 修改为强制显示空状态
+    const orderList = document.querySelector('.order-list');
+    const emptyOrderState = document.querySelector('.empty-state');
+
+    // 强制显示空状态（移除动态判断逻辑）
+    if (orderList) orderList.style.display = 'none';
+    if (emptyOrderState) emptyOrderState.style.display = 'flex';
+  </script>
+<script>
+// 等待页面加载完成
+window.addEventListener('load', function() {
+  // 获取侧边栏元素
+  const sidebar = document.querySelector('.profile-sidebar');
+  // 获取空状态容器
+  const emptyState = document.querySelector('.empty-state');
+  
+  if (sidebar && emptyState) {
+    // 设置空状态容器高度等于侧边栏高度
+    emptyState.style.minHeight = sidebar.offsetHeight + 'px';
+  }
+});
+</script>
+</body>
+</html>
+
+
+  <!-- 登录注册模态框 -->
+  <div id="auth-modal" class="auth-modal">
+    <div class="auth-container">
+      <!-- 登录注册卡片 -->
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <!-- 品牌与模式切换 -->
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-user-circle text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">Fuzzy Toys账户</h1>
+          </div>
+          <button id="close-modal" class="close-modal">×</button>
+        </div>
+
+        <!-- 表单切换选项卡 -->
+        <div class="flex border-b border-neutral-200">
+          <button id="modal-login-tab" class="flex-1 py-4 text-primary font-medium border-b-2 border-primary">登录</button>
+          <button id="modal-register-tab" class="flex-1 py-4 text-neutral-500 hover:text-neutral-700 transition-colors">注册</button>
+        </div>
+
+        <!-- 登录表单 -->
+        <div id="modal-login-form" class="p-6 animate-fade-in">
+          <div class="space-y-4">
+            <div>
+              <label for="modal-login-email" class="block text-sm font-medium text-neutral-700 mb-1">邮箱地址</label>
+              <div class="relative">
+                <i class="fa fa-envelope-o absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="email" id="modal-login-email" class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="your@email.com">
+              </div>
+            </div>
+            <div>
+              <label for="modal-login-password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-login-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="输入密码">
+                <button type="button" id="modal-toggle-login-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <label class="flex items-center">
+                <input type="checkbox" class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary">
+                <span class="ml-2 text-sm text-neutral-600">记住我</span>
+              </label>
+              <a href="#" class="text-sm text-primary hover:underline">忘记密码？</a>
+            </div>
+            <button type="button" id="modal-login-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+              登录账户
+            </button>
+          </div>
+          <p class="text-center text-sm text-neutral-500 mt-4">
+            还没有账户？<a href="#" id="modal-go-to-register" class="text-primary hover:underline">立即注册</a>
+          </p>
+        </div>
+
+        <!-- 注册表单（默认隐藏） -->
+        <div id="modal-register-form" class="p-6 animate-fade-in hidden">
+          <div class="space-y-4">
+            <div>
+              <label for="modal-register-email" class="block text-sm font-medium text-neutral-700 mb-1">邮箱地址</label>
+              <div class="relative">
+                <i class="fa fa-envelope-o absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="email" id="modal-register-email" class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="your@email.com">
+              </div>
+            </div>
+            <div>
+              <label for="modal-register-password" class="block text-sm font-medium text-neutral-700 mb-1">密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-register-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="至少8位字符">
+                <button type="button" id="modal-toggle-register-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label for="modal-register-confirm-password" class="block text-sm font-medium text-neutral-700 mb-1">确认密码</label>
+              <div class="relative">
+                <i class="fa fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"></i>
+                <input type="password" id="modal-register-confirm-password" class="w-full pl-10 pr-12 py-3 rounded-lg border border-neutral-300 input-focus bg-white" placeholder="再次输入密码">
+                <button type="button" id="modal-toggle-register-confirm-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-primary transition-colors">
+                  <i class="fa fa-eye-slash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-start">
+              <label class="flex items-center h-5">
+                <input type="checkbox" class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary">
+              </label>
+              <span class="ml-2 text-sm text-neutral-600">
+                我同意<a href="#" class="text-primary hover:underline">服务条款</a>和<a href="#" class="text-primary hover:underline">隐私政策</a>
+              </span>
+            </div>
+            <button type="button" id="modal-register-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+              注册账户
+            </button>
+          </div>
+          <p class="text-center text-sm text-neutral-500 mt-4">
+            已有账户？<a href="#" id="modal-go-to-login" class="text-primary hover:underline">立即登录</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- 通知提示框 -->
+      <div id="modal-notification" class="fixed bottom-4 left-1/2 -translate-x-1/2 p-4 rounded-lg shadow-lg max-w-xs transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center">
+        <div id="modal-notification-icon" class="w-6 h-6 rounded-full flex items-center justify-center mr-3 flex-shrink-0"></div>
+        <span id="modal-notification-message" class="text-sm"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 优惠券弹窗 -->
+  <div id="coupon-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-ticket text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">我的优惠券</h1>
+          </div>
+          <button id="close-coupon-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-ticket"></i></div>
+          <p class="text-neutral-500 text-lg">暂无可用优惠券</p>
+          <button id="confirm-coupon" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 积分记录弹窗 -->
+  <div id="points-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-star text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">积分记录</h1>
+          </div>
+          <button id="close-points-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-star-o"></i></div>
+          <p class="text-neutral-500 text-lg">暂无可用积分</p>
+          <button id="confirm-points" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 地址管理弹窗 -->
+  <div id="address-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-map-marker text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">地址管理</h1>
+          </div>
+          <button id="close-address-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-6">
+          <div class="address-item default">
+            <div class="address-tag">默认地址</div>
+            <div class="address-name">张三 (收)</div>
+            <div class="address-details">株洲市 100080 13800138000</div>
+            <div class="address-actions">
+              <button class="address-btn">设为默认</button>
+              <button class="address-btn">编辑</button>
+              <button class="address-btn">删除</button>
+            </div>
+          </div>
+          
+          <div class="address-item">
+            <div class="address-name">李四 (收)</div>
+            <div class="address-details">长沙市 201203 13900139000</div>
+            <div class="address-actions">
+              <button class="address-btn">设为默认</button>
+              <button class="address-btn">编辑</button>
+              <button class="address-btn">删除</button>
+            </div>
+          </div>
+          
+          <button class="order-btn">添加新地址</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 收藏弹窗控制 -->
+  <div id="wishlist-modal" class="auth-modal">
+    <div class="auth-container">
+      <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <div class="p-6 border-b border-neutral-200 flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-heart text-xl"></i>
+            </div>
+            <h1 class="text-xl font-bold">我的收藏</h1>
+          </div>
+          <button id="close-wishlist-modal" class="close-modal">×</button>
+        </div>
+        <div class="p-8 text-center">
+          <div class="text-neutral-400 text-5xl mb-4"><i class="fa fa-heart-o"></i></div>
+          <p class="text-neutral-500 text-lg">暂无收藏商品</p>
+          <button id="confirm-wishlist" class="mt-6 w-full py-3 bg-primary text-white font-medium rounded-lg btn-hover">
+            确定
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚 -->
+ 
+
+
+  <script>
+    // 模态框控制
+    const authModal = document.getElementById('auth-modal');
+    const openLoginModal = document.getElementById('open-login-modal');
+    const closeModal = document.getElementById('close-modal');
+    
+    openLoginModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      authModal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // 防止背景滚动
+    });
+    
+    closeModal.addEventListener('click', () => {
+      authModal.classList.remove('active');
+      document.body.style.overflow = ''; // 恢复背景滚动
+    });
+    
+    // 点击模态框外部关闭
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // 表单切换
+    const modalLoginTab = document.getElementById('modal-login-tab');
+    const modalRegisterTab = document.getElementById('modal-register-tab');
+    const modalLoginForm = document.getElementById('modal-login-form');
+    const modalRegisterForm = document.getElementById('modal-register-form');
+    const modalGoToRegister = document.getElementById('modal-go-to-register');
+    const modalGoToLogin = document.getElementById('modal-go-to-login');
+
+    function showModalLoginForm() {
+      modalLoginForm.classList.remove('hidden');
+      modalRegisterForm.classList.add('hidden');
+      modalLoginTab.classList.add('text-primary', 'border-primary');
+      modalRegisterTab.classList.remove('text-primary', 'border-primary');
+      modalRegisterTab.classList.add('text-neutral-500');
+    }
+
+    function showModalRegisterForm() {
+      modalLoginForm.classList.add('hidden');
+      modalRegisterForm.classList.remove('hidden');
+      modalRegisterTab.classList.add('text-primary', 'border-primary');
+      modalLoginTab.classList.remove('text-primary', 'border-primary');
+      modalLoginTab.classList.add('text-neutral-500');
+    }
+
+    modalLoginTab.addEventListener('click', showModalLoginForm);
+    modalRegisterTab.addEventListener('click', showModalRegisterForm);
+    modalGoToRegister.addEventListener('click', showModalRegisterForm);
+    modalGoToLogin.addEventListener('click', showModalLoginForm);
+
+    // 密码显示/隐藏
+    function setupModalPasswordToggle(buttonId, inputId) {
+      const button = document.getElementById(buttonId);
+      const input = document.getElementById(inputId);
+      
+      button.addEventListener('click', () => {
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        button.innerHTML = type === 'password' ? '<i class="fa fa-eye-slash"></i>' : '<i class="fa fa-eye"></i>';
+      });
+    }
+
+    setupModalPasswordToggle('modal-toggle-login-password', 'modal-login-password');
+    setupModalPasswordToggle('modal-toggle-register-password', 'modal-register-password');
+    setupModalPasswordToggle('modal-toggle-register-confirm-password', 'modal-register-confirm-password');
+
+    // 表单验证与提交
+    const modalLoginBtn = document.getElementById('modal-login-btn');
+    const modalRegisterBtn = document.getElementById('modal-register-btn');
+
+    modalLoginBtn.addEventListener('click', () => {
+      const email = document.getElementById('modal-login-email').value.trim();
+      const password = document.getElementById('modal-login-password').value.trim();
+      
+      if (!email || !password) {
+        showModalNotification('请填写所有字段', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showModalNotification('请输入有效的邮箱地址', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showModalNotification('密码至少需要6位', 'error');
+        return;
+      }
+      
+      // 模拟登录成功
+      showModalNotification('登录成功，正在跳转...', 'success');
+      setTimeout(() => {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // 更新个人中心显示
+        document.querySelector('.profile-info h2').textContent = 'POP会员';
+        document.querySelector('.profile-info p:nth-of-type(1)').textContent = '等级：LV.1';
+        document.querySelector('.profile-info p:nth-of-type(2)').textContent = '积分：100.00';
+        
+        // 隐藏登录链接，显示退出链接
+        const profileMenu = document.querySelector('.profile-menu');
+        const loginItem = profileMenu.querySelector('li:last-child');
+        loginItem.innerHTML = '<a href="#" id="logout">退出登录</a>';
+        
+        // 添加退出事件
+        document.getElementById('logout').addEventListener('click', (e) => {
+          e.preventDefault();
+          // 恢复未登录状态
+          document.querySelector('.profile-info h2').textContent = '未登录';
+          document.querySelector('.profile-info p:nth-of-type(1)').textContent = '等级：LV.0';
+          document.querySelector('.profile-info p:nth-of-type(2)').textContent = '积分：0.00';
+          
+          // 恢复登录链接
+          loginItem.innerHTML = '<a href="#" id="open-login-modal">登录</a>';
+          
+          // 重新绑定登录按钮事件
+          document.getElementById('open-login-modal').addEventListener('click', (e) => {
+            e.preventDefault();
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          });
+        });
+      }, 1500);
+    });
+
+    modalRegisterBtn.addEventListener('click', () => {
+      const email = document.getElementById('modal-register-email').value.trim();
+      const password = document.getElementById('modal-register-password').value.trim();
+      const confirmPassword = document.getElementById('modal-register-confirm-password').value.trim();
+      
+      if (!email || !password || !confirmPassword) {
+        showModalNotification('请填写所有字段', 'error');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        showModalNotification('请输入有效的邮箱地址', 'error');
+        return;
+      }
+      
+      if (password.length < 8) {
+        showModalNotification('密码至少需要8位', 'error');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        showModalNotification('两次输入的密码不一致', 'error');
+        return;
+      }
+      
+      // 模拟注册成功
+      showModalNotification('注册成功，欢迎加入！', 'success');
+      setTimeout(() => {
+        showModalLoginForm();
+      }, 1500);
+    });
+
+    // 邮箱验证
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // 通知提示
+    function showModalNotification(message, type) {
+      const notification = document.getElementById('modal-notification');
+      const messageEl = document.getElementById('modal-notification-message');
+      const iconEl = document.getElementById('modal-notification-icon');
+      
+      messageEl.textContent = message;
+      
+      if (type === 'success') {
+        notification.classList.remove('bg-red-50', 'text-red-800', 'border-red-200');
+        notification.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+        iconEl.classList.remove('bg-red-100', 'text-red-500');
+        iconEl.classList.add('bg-green-100', 'text-green-500');
+        iconEl.innerHTML = '<i class="fa fa-check"></i>';
+      } else {
+        notification.classList.remove('bg-green-50', 'text-green-800', 'border-green-200');
+        notification.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+        iconEl.classList.remove('bg-green-100', 'text-green-500');
+        iconEl.classList.add('bg-red-100', 'text-red-500');
+        iconEl.innerHTML = '<i class="fa fa-exclamation"></i>';
+      }
+
+      notification.classList.remove('translate-y-20', 'opacity-0');
+
+      setTimeout(() => {
+        notification.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // 优惠券弹窗控制
+    const couponModal = document.getElementById('coupon-modal');
+    const openCouponModal = document.getElementById('open-coupon-modal');
+    const closeCouponModal = document.getElementById('close-coupon-modal');
+    const confirmCoupon = document.getElementById('confirm-coupon');
+
+    if (openCouponModal) {
+      openCouponModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (couponModal) {
+          couponModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeCouponModalFunc() {
+      if (couponModal) {
+        couponModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeCouponModal) {
+      closeCouponModal.addEventListener('click', closeCouponModalFunc);
+    }
+
+    if (confirmCoupon) {
+      confirmCoupon.addEventListener('click', closeCouponModalFunc);
+    }
+
+    if (couponModal) {
+      couponModal.addEventListener('click', (e) => {
+        if (e.target === couponModal) {
+          closeCouponModalFunc();
+        }
+      });
+    }
+
+    // 积分记录弹窗控制
+    const pointsModal = document.getElementById('points-modal');
+    const openPointsModal = document.getElementById('open-points-modal');
+    const closePointsModal = document.getElementById('close-points-modal');
+    const confirmPoints = document.getElementById('confirm-points');
+
+    if (openPointsModal) {
+      openPointsModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (pointsModal) {
+          pointsModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closePointsModalFunc() {
+      if (pointsModal) {
+        pointsModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closePointsModal) {
+      closePointsModal.addEventListener('click', closePointsModalFunc);
+    }
+
+    if (confirmPoints) {
+      confirmPoints.addEventListener('click', closePointsModalFunc);
+    }
+
+    if (pointsModal) {
+      pointsModal.addEventListener('click', (e) => {
+        if (e.target === pointsModal) {
+          closePointsModalFunc();
+        }
+      });
+    }
+    // 地址管理弹窗控制
+    const addressModal = document.getElementById('address-modal');
+    const openAddressModal = document.getElementById('open-address-modal');
+    const closeAddressModal = document.getElementById('close-address-modal');
+
+    if (openAddressModal) {
+      openAddressModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (addressModal) {
+          addressModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeAddressModalFunc() {
+      if (addressModal) {
+        addressModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeAddressModal) {
+      closeAddressModal.addEventListener('click', closeAddressModalFunc);
+    }
+
+    if (addressModal) {
+      addressModal.addEventListener('click', (e) => {
+        if (e.target === addressModal) {
+          closeAddressModalFunc();
+        }
+      });
+    }
+
+    // 收藏弹窗控制
+    const wishlistModal = document.getElementById('wishlist-modal');
+    const openWishlistModal = document.getElementById('open-wishlist-modal');
+    const closeWishlistModal = document.getElementById('close-wishlist-modal');
+    const confirmWishlist = document.getElementById('confirm-wishlist');
+
+    if (openWishlistModal) {
+      openWishlistModal.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (wishlistModal) {
+          wishlistModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    }
+
+    function closeWishlistModalFunc() {
+      if (wishlistModal) {
+        wishlistModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    if (closeWishlistModal) {
+      closeWishlistModal.addEventListener('click', closeWishlistModalFunc);
+    }
+
+    if (confirmWishlist) {
+      confirmWishlist.addEventListener('click', closeWishlistModalFunc);
+    }
+
+    if (wishlistModal) {
+      wishlistModal.addEventListener('click', (e) => {
+        if (e.target === wishlistModal) {
+          closeWishlistModalFunc();
+        }
+      });
+    }
+  </script>
+  
+</body>
+</html>

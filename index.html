@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>fuzzy Toys</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* 轮播图容器 */
+    .carousel {
+      height: 20vh; /* 原高度 90vh 的一半 */
+      position: relative;
+      overflow: hidden;
+    }
+    .carousel-slides {
+      width: 500%; /* 修改为500%以容纳5张幻灯片 */
+      height: 100%; /* 继承父容器高度 */
+      display: flex;
+    }
+    .carousel-slide {
+      width: 20%; /* 修改为20% (100%/5) */
+      height: 100%; /* 继承父容器高度 */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* 示例轮播图背景（替换为实际图片） */
+    .carousel-slide:nth-child(1) { background-image: url("img/0.png"); }
+    .carousel-slide:nth-child(2) { background-image: url("img/jellcat.png"); }
+    .carousel-slide:nth-child(3) { background-image: url("img/dishini.png"); }
+
+    /* 轮播文案 */
+    .carousel-caption {
+      text-align: center;
+      color: #fff;
+      padding: 20px 40px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 8px;
+    }
+    .carousel-caption h2 {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .carousel-caption p {
+      font-size: 18px;
+    }
+
+    /* 轮播控制按钮 */
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 24px;
+    }
+    .carousel-control.prev { left: 20px; }
+    .carousel-control.next { right: 20px; }
+
+    /* 轮播指示器 */
+    .carousel-indicators {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .carousel-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+    .carousel-indicator.active {
+      background: #fff;
+    }
+
+    /* 公司介绍区域 */
+    .about-section {
+      max-width: 800px;
+      margin: 0 auto 60px;
+      text-align: center;
+    }
+    .about-section h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      margin-top: 30px; /* 添加上边距使其向下移动 */
+    }
+    .about-section h2 {
+      font-size: 20px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .about-desc {
+      line-height: 1.0;
+      margin-bottom: 20px;
+      font-family: sans-serif; /* 添加无衬线字体 */
+    }
+    .about-img {
+      width: 800px;
+      height: 450px;
+      margin: 0 auto;
+      background: #bfa240;
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .logo-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .logo-overlay img {
+      height: 60px;
+      margin-bottom: 12px;
+    }
+    .play-btn {
+      font-size: 36px;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    /* 产品展示区 */
+    .products-section {
+      max-width: 1000px;
+      margin: 0 auto 80px;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .section-title h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .section-title p {
+      color: #666;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+    .product-img {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+    .product-info {
+      padding: 12px;
+    }
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .product-price {
+      color: #f00;
+      font-weight: bold;
+    }
+
+    /* 新闻动态区 */
+    .news-section {
+      max-width: 1000px;
+      margin: 0 auto 80px;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+    .news-item {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+    .news-img {
+      width: 150px;
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+    }
+    .news-content {
+      flex: 1;
+      padding: 15px;
+    }
+    .news-content h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .news-date {
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .news-excerpt {
+      color: #666;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <a href="index.html"><img src="img/logo.png" alt="POP MART"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="mall.html">线上商城</a></li>
+      <li><a href="campus.html">校园交易</a></li>
+      <li><a href="profile.html">个人中心</a></li>
+    </ul>
+  </nav>
+
+  <!-- 轮播图 -->
+  <!-- 轮播图 -->
+  <!-- 轮播图 -->
+  <div class="carousel">
+    <div class="carousel__slides" id="carouselSlides">
+      <div class="carousel__slide" style="background-image: url('img/0.png');">
+        <div class="carousel__caption">
+          <h2>森林萌宠系列</h2>
+          <p>To light up passion and bring joy</p>
+        </div>
+      </div>
+      <div class="carousel__slide" style="background-image: url('img/dishini.jpg');">
+        <div class="carousel__caption">
+          <h2>迪士尼皮克斯系列</h2>
+          <p>玩具总动员</p>
+        </div>
+      </div>
+      <div class="carousel__slide" style="background-image: url('img/jellcat.jpg');">
+        <div class="carousel__caption">
+          <h2>jellycat</h2>
+          <p>可爱 治愈</p>
+        </div>
+      </div>
+      <!-- 新增轮播图 -->
+      <div class="carousel__slide" style="background-image: url('img/1.png');">
+        <div class="carousel__caption">
+          <h2>Dimoo星座系列</h2>
+          <p>探索星空的奥秘</p>
+        </div>
+      </div>
+      <div class="carousel__slide" style="background-image: url('img/2.png');">
+        <div class="carousel__caption">
+          <h2>Skull Panda暗黑系列</h2>
+          <p>神秘与艺术的碰撞</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel__control carousel__control--prev" id="prevBtn">&lt;</button>
+    <button class="carousel__control carousel__control--next" id="nextBtn">&gt;</button>
+    <div class="carousel__indicators" id="indicators"></div>
+  </div>
+
+  <!-- 公司介绍 -->
+  <div class="about-section">
+    <h1>ABOUT US</h1>
+    <h2>关于我们</h2>
+    <p class="about-desc">Fuzzy Toys成立于2025年6月6日，是专注于校园潮流玩具</p>
+    <p class="about-desc">致力于为校园年轻群体提供新奇、有趣的收藏体验。作为泡泡玛特（POP MART）的校园合作伙伴，我们以IP孵化、潮流文化推广、社交化购物为核心，打造集购物、分享、互动于一体的年轻化平台。</p>
+    <p class="about-desc">我们围绕潮流玩具（潮玩）展开业务，主要涵盖：</p>
+    <p class="about-desc">我们携手泡泡玛特（POP MART），引进其全球知名IP系列，包括但不限于：  MOLLY（茉莉），LABUBU（拉布布）， DIMOO（迪莫） SKULLPANDA（骷髅熊猫），PUCKY（毕奇）
+</p>
+    <div class="about-img">
+      <div class="carousel image-carousel">
+        <div class="carousel__slides">
+			<img src="img/5.jpg" width="100%" height="60%" alt="Logo"> <!-- 将高度从70%调整为50% -->
+        </div>
+        ]
+        <div class="carousel__indicators"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 产品展示区 -->
+  <div class="products-section">
+    <div class="section-title">
+      <h2>热门产品</h2>
+      <p>精选人气潮玩系列</p>
+    </div>
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-img" style="background-image: url('img/0.png')"></div>
+        <div class="product-info">
+          <h3>Molly森林系列</h3>
+          <p class="product-price">¥69</p>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img" style="background-image: url('img/1.png')"></div>
+        <div class="product-info">
+          <h3>Dimoo星座系列</h3>
+          <p class="product-price">¥69</p>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img" style="background-image: url('img/2.png')"></div>
+        <div class="product-info">
+          <h3>Skull Panda暗黑系列</h3>
+          <p class="product-price">¥69</p>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img" style="background-image: url('img/3.png')"></div>
+        <div class="product-info">
+          <h3>LABUBU水果系列</h3>
+          <p class="product-price">¥69</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新闻动态区 -->
+  <div class="news-section">
+    <div class="section-title">
+      <h2>新闻动态</h2>
+      <p>了解最新资讯</p>
+    </div>
+    <div class="news-grid">
+      <div class="news-item">
+        <div class="news-img" style="background-image: url('img/0.png')"></div>
+        <div class="news-content">
+          <h3>泡泡玛特×迪士尼联名系列首发</h3>
+          <p class="news-date">2023-06-15</p>
+          <p class="news-excerpt">泡泡玛特与迪士尼达成战略合作，推出全新联名系列，将经典迪士尼角色融入潮玩设计...</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-img" style="background-image: url('img/21.jpeg')"></div>
+        <div class="news-content">
+          <h3>泡泡玛特全球潮玩设计大赛圆满结束</h3>
+          <p class="news-date">2023-05-28</p>
+          <p class="news-excerpt">经过三个月的激烈角逐，泡泡玛特全球潮玩设计大赛评选结果揭晓，来自12个国家的优秀作品脱颖而出...</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-img" style="background-image: url('img/2.png')"></div>
+        <div class="news-content">
+          <h3>泡泡玛特第100家线下门店开业</h3>
+          <p class="news-date">2023-04-10</p>
+          <p class="news-excerpt">泡泡玛特第100家线下门店在北京三里屯正式开业，标志着品牌线下布局进入新阶段...</p>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-img" style="background-image: url('img/3.png')"></div>
+        <div class="news-content">
+          <h3>泡泡玛特发布2023年上半年财报</h3>
+          <p class="news-date">2023-03-05</p>
+          <p class="news-excerpt">泡泡玛特发布2023年上半年财报，实现营收25.7亿元，同比增长38.7%，净利润4.9亿元...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 页脚（与其他页面统一） -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <img src="img/logo.png" alt="POP MART">
+    </div>
+    <div class="footer-links">
+      <a href="#">加入我们</a>|
+      <a href="#">联系我们</a>|
+      <a href="#">廉洁合规</a>
+    </div>
+    <div class="contact-info">
+      湖南省株洲市株洲示范高等专科学校<br>
+       ©Fuzzy Toys  love live Toys
+    </div>
+    <div class="social-icons">
+      <a href="#"><img src="img/weixin.png" alt="微信"></a>
+      <a href="#"><img src="img/weibo.png" alt="微博"></a>
+    </div>
+  </footer>
+
+  <!-- 轮播交互JS -->
+  <script>
+    const carousel = {
+      init() {
+        this.slides = document.querySelectorAll('.carousel__slide');
+        this.slidesContainer = document.getElementById('carouselSlides');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.indicatorsContainer = document.getElementById('indicators');
+        this.currentIndex = 0;
+        this.totalSlides = this.slides.length;
+    
+        // 生成指示器
+        this.createIndicators();
+    
+        // 绑定事件
+        this.prevBtn.addEventListener('click', () => this.goToSlide(this.currentIndex - 1));
+        this.nextBtn.addEventListener('click', () => this.goToSlide(this.currentIndex + 1));
+    
+        // 自动轮播
+        this.autoPlay = setInterval(() => this.goToSlide(this.currentIndex + 1), 5000);
+      },
+    
+      createIndicators() {
+        for (let i = 0; i < this.totalSlides; i++) {
+          const indicator = document.createElement('button');
+          indicator.className = 'carousel__indicator';
+          indicator.addEventListener('click', () => this.goToSlide(i));
+          this.indicatorsContainer.appendChild(indicator);
+        }
+        this.indicators = document.querySelectorAll('.carousel__indicator');
+        this.indicators[0].classList.add('active');
+      },
+    
+      goToSlide(index) {
+        if (index < 0) index = this.totalSlides - 1;
+        if (index >= this.totalSlides) index = 0;
+    
+        // 切换幻灯片
+        this.slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+    
+        // 更新指示器
+        this.indicators.forEach(ind => ind.classList.remove('active'));
+        this.indicators[index].classList.add('active');
+    
+        this.currentIndex = index;
+      }
+    };
+    
+    // 初始化轮播
+    carousel.init();
+  </script>
+</body>
+</html>
+<style>
+  /* 轮播图容器 */
+  .carousel {
+    height: 90vh; /* 占屏幕高度的90% */
+    position: relative;
+    overflow: hidden;
+  }
+  .carousel-slides {
+    width: 500%; /* 修改为500%以容纳5张幻灯片 */
+    height: 100%; /* 继承父容器高度 */
+    display: flex;
+  }
+  .carousel-slide {
+    width: 20%; /* 修改为20% (100%/5) */
+    height: 100%; /* 继承父容器高度 */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* 示例轮播图背景（替换为实际图片） */
+  .carousel-slide:nth-child(1) { background-image: url("img/0.png"); }
+  .carousel-slide:nth-child(2) { background-image: url("img/jellcat.png"); }
+  .carousel-slide:nth-child(3) { background-image: url("img/dishini.png"); }
+
+  /* 轮播文案 */
+  .carousel-caption {
+    text-align: center;
+    color: #fff;
+    padding: 20px 40px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 8px;
+  }
+  .carousel-caption h2 {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .carousel-caption p {
+    font-size: 18px;
+  }
+
+  /* 轮播控制按钮 */
+  .carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 24px;
+  }
+  .carousel-control.prev { left: 20px; }
+  .carousel-control.next { right: 20px; }
+
+  /* 轮播指示器 */
+  .carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+  }
+  .carousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+  }
+  .carousel-indicator.active {
+    background: #fff;
+  }
+
+  /* 公司介绍区域 */
+  .about-section {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    text-align: center;
+  }
+  .about-section h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    margin-top: 30px; /* 添加上边距使其向下移动 */
+  }
+  .about-section h2 {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .about-desc {
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .about-img {
+    width: 800px;
+    height: 450px;
+    margin: 0 auto;
+    background: #bfa240;
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .logo-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .logo-overlay img {
+    height: 60px;
+    margin-bottom: 12px;
+  }
+  .play-btn {
+    font-size: 36px;
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  /* 产品展示区 */
+  .products-section {
+    max-width: 1000px;
+    margin: 0 auto 80px;
+  }
+  .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .section-title h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .section-title p {
+    color: #666;
+  }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .product-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  .product-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+  .product-info {
+    padding: 12px;
+  }
+  .product-info h3 {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .product-price {
+    color: #f00;
+    font-weight: bold;
+  }
+
+  /* 新闻动态区 */
+  .news-section {
+    max-width: 1000px;
+    margin: 0 auto 80px;
+  }
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+  .news-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+  }
+  .news-img {
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+  }
+  .news-content {
+    flex: 1;
+    padding: 15px;
+  }
+  .news-content h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .news-date {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .news-excerpt {
+    color: #666;
+    line-height: 1.4;
+  }
+  .nav-links a {
+  text-decoration: none;
+  color: #fff; /* 将文字颜色改为白色 */
+  font-weight: 400;
+  transition: color 0.3s;
+}
+</style>
+</body>
+</html>
+
