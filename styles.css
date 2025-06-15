@@ -3321,4 +3321,14 @@ a {
 .profile-content {
   flex: 1;
 }
+/* 登录按钮样式 */
+#modal-login-btn {
+  background-color: #ffd600; /* 黄色背景 */
+  color: #000; /* 黑色文字，确保与黄色背景对比度 */
+}
+
+/* 悬停效果 */
+#modal-login-btn:hover {
+  background-color: #ffc800; /* 深黄色悬停效果 */
+}
 
